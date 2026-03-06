@@ -1,0 +1,194 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Kubernetes API",
+        "version": "1.28.0"
+    },
+    "paths": {},
+    "components": {
+        "schemas": {
+            "io.k8s.api.core.v1.Pod": {
+                "type": "object",
+                "description": "Pod is a collection of containers that can run on a host.",
+                "properties": {
+                    "apiVersion": {
+                        "type": "string",
+                        "description": "APIVersion defines the versioned schema of this representation of an object."
+                    },
+                    "kind": {
+                        "type": "string",
+                        "description": "Kind is a string value representing the REST resource this object represents."
+                    },
+                    "metadata": {
+                        "$ref": "#/components/schemas/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+                    },
+                    "spec": {
+                        "$ref": "#/components/schemas/io.k8s.api.core.v1.PodSpec"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/io.k8s.api.core.v1.PodStatus"
+                    }
+                },
+                "x-kubernetes-group-version-kind": [
+                    {
+                        "group": "",
+                        "kind": "Pod",
+                        "version": "v1"
+                    }
+                ]
+            },
+            "io.k8s.api.core.v1.PodSpec": {
+                "type": "object",
+                "required": [
+                    "containers"
+                ],
+                "description": "PodSpec is a description of a pod.",
+                "properties": {
+                    "containers": {
+                        "type": "array",
+                        "description": "List of containers belonging to the pod.",
+                        "items": {
+                            "$ref": "#/components/schemas/io.k8s.api.core.v1.Container"
+                        },
+                        "x-kubernetes-patch-merge-key": "name",
+                        "x-kubernetes-patch-strategy": "merge"
+                    },
+                    "nodeName": {
+                        "type": "string",
+                        "description": "NodeName is a request to schedule this pod onto a specific node."
+                    },
+                    "serviceAccountName": {
+                        "type": "string",
+                        "description": "ServiceAccountName is the name of the ServiceAccount to use to run this pod."
+                    }
+                }
+            },
+            "io.k8s.api.core.v1.Container": {
+                "type": "object",
+                "required": [
+                    "name"
+                ],
+                "description": "A single application container that you want to run within a pod.",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Name of the container specified as a DNS_LABEL."
+                    },
+                    "image": {
+                        "type": "string",
+                        "description": "Container image name."
+                    },
+                    "ports": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/io.k8s.api.core.v1.ContainerPort"
+                        },
+                        "x-kubernetes-list-map-keys": [
+                            "containerPort",
+                            "protocol"
+                        ],
+                        "x-kubernetes-list-type": "map",
+                        "x-kubernetes-patch-merge-key": "containerPort",
+                        "x-kubernetes-patch-strategy": "merge"
+                    },
+                    "env": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/io.k8s.api.core.v1.EnvVar"
+                        },
+                        "x-kubernetes-patch-merge-key": "name",
+                        "x-kubernetes-patch-strategy": "merge"
+                    }
+                }
+            },
+            "io.k8s.api.core.v1.ContainerPort": {
+                "type": "object",
+                "required": [
+                    "containerPort"
+                ],
+                "properties": {
+                    "containerPort": {
+                        "type": "integer",
+                        "format": "int32",
+                        "description": "Number of port to expose on the pod's IP address."
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "If specified, this must be an IANA_SVC_NAME."
+                    },
+                    "protocol": {
+                        "type": "string",
+                        "description": "Protocol for port. Must be UDP, TCP, or SCTP.",
+                        "enum": [
+                            "TCP",
+                            "UDP",
+                            "SCTP"
+                        ]
+                    }
+                }
+            },
+            "io.k8s.api.core.v1.EnvVar": {
+                "type": "object",
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Name of the environment variable."
+                    },
+                    "value": {
+                        "type": "string",
+                        "description": "Variable references $(VAR_NAME) are expanded."
+                    }
+                }
+            },
+            "io.k8s.api.core.v1.PodStatus": {
+                "type": "object",
+                "description": "PodStatus represents information about the status of a pod.",
+                "properties": {
+                    "phase": {
+                        "type": "string",
+                        "description": "The phase of a Pod is a simple, high-level summary of where the Pod is in its lifecycle."
+                    },
+                    "hostIP": {
+                        "type": "string",
+                        "description": "hostIP holds the IP address of the host to which the pod is assigned."
+                    },
+                    "podIP": {
+                        "type": "string",
+                        "description": "podIP address allocated to the pod."
+                    }
+                }
+            },
+            "io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta": {
+                "type": "object",
+                "description": "ObjectMeta is metadata that all persisted resources must have.",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Name must be unique within a namespace."
+                    },
+                    "namespace": {
+                        "type": "string",
+                        "description": "Namespace defines the space within which each name must be unique."
+                    },
+                    "labels": {
+                        "type": "object",
+                        "description": "Map of string keys and values that can be used to organize and categorize objects.",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
+                    },
+                    "annotations": {
+                        "type": "object",
+                        "description": "Annotations is an unstructured key value map.",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
