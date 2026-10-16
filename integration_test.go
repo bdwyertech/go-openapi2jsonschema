@@ -3,6 +3,7 @@ package openapi2jsonschema
 import (
 	"encoding/json"
 	"os"
+	"reflect"
 	"testing"
 )
 
@@ -114,8 +115,13 @@ func TestConvert_KubernetesExtensionsPreserved(t *testing.T) {
 	if pod.Extensions == nil {
 		t.Fatal("Pod extensions is nil, expected x-kubernetes-group-version-kind")
 	}
-	if _, ok := pod.Extensions["x-kubernetes-group-version-kind"]; !ok {
-		t.Error("Pod should have x-kubernetes-group-version-kind extension")
+	gvk, ok := pod.Extensions["x-kubernetes-group-version-kind"]
+	if !ok {
+		t.Fatal("Pod should have x-kubernetes-group-version-kind extension")
+	}
+	wantGVK := []any{map[string]any{"group": "", "kind": "Pod", "version": "v1"}}
+	if !reflect.DeepEqual(gvk, wantGVK) {
+		t.Errorf("x-kubernetes-group-version-kind = %#v (%T), want %#v", gvk, gvk, wantGVK)
 	}
 }
 

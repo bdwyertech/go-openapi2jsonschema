@@ -3,6 +3,7 @@ package openapi2jsonschema
 import (
 	"encoding/json"
 	"os"
+	"reflect"
 	"testing"
 )
 
@@ -143,6 +144,16 @@ func TestConvert_EnumField(t *testing.T) {
 
 	if len(statusProp.Enum) != 3 {
 		t.Fatalf("Pet.status enum length = %d, want 3", len(statusProp.Enum))
+	}
+
+	want := []any{"available", "pending", "sold"}
+	if !reflect.DeepEqual(statusProp.Enum, want) {
+		t.Errorf("Pet.status enum = %#v, want %#v", statusProp.Enum, want)
+	}
+	for i, v := range statusProp.Enum {
+		if _, ok := v.(string); !ok {
+			t.Errorf("Pet.status enum[%d] type = %T, want string", i, v)
+		}
 	}
 }
 
